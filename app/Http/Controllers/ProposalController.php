@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\NumberToWords;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -96,12 +97,14 @@ class ProposalController extends Controller
                     'status' => 'OPEN',
                     'subStatus' => 'OPEN',
                     'totalValue' => $debitValue,
+                    'totalValueExtenso' => NumberToWords::brl($debitValue),
                     'validDate' => $validDate,
                     'suggestedValidDate' => $validDate,
                     'maxValidDate' => $maxDate,
                     'minValidDate' => $today,
                     'boleto' => null,
                     'minValue' => $paymentOptions[0]['firstValue'],
+                    'minValueExtenso' => NumberToWords::brl($paymentOptions[0]['firstValue']),
                     'externalId' => null,
                     'requestPromise' => false,
                     'canNegotiateAfterPromise' => false,
@@ -193,17 +196,22 @@ class ProposalController extends Controller
             $options[] = [
                 'id' => $id,
                 'firstValue' => $firstValue,
+                'firstValueExtenso' => NumberToWords::brl($firstValue),
                 'debitValue' => $debitValue,
+                'debitValueExtenso' => NumberToWords::brl($debitValue),
                 'identifier' => $identifier,
                 'description' => null,
                 'installmentNumber' => $config['number'],
                 'installmentValue' => $installmentValue,
+                'installmentValueExtenso' => NumberToWords::brl($installmentValue),
                 'model' => $model,
                 'paymentDescription' => null,
                 'paymentComplement' => '',
                 'suggested' => $config['suggested'],
                 'totalValue' => $totalValue,
+                'totalValueExtenso' => NumberToWords::brl($totalValue),
                 'discountValue' => $discountValue,
+                'discountValueExtenso' => NumberToWords::brl($discountValue),
                 'percDiscount' => $config['discount'] * 100,
             ];
         }

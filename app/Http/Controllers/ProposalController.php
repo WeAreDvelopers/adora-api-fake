@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\NumberToWords;
-use Illuminate\Container\Attributes\Log;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 

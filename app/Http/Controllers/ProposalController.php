@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\NumberToWords;
+use Illuminate\Container\Attributes\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -136,6 +137,7 @@ class ProposalController extends Controller
      */
     public function confirm(Request $request, $proposalId)
     {
+        Log::info($request->all());
         $debitId = $request->input('debitId', rand(80000000, 90000000));
         $paymentOptionId = $request->input('paymentOptionId');
 

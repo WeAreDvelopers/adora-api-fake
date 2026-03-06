@@ -2,6 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(php artisan:*)"
+    ],
+    "additionalDirectories": [
+      "d:\\Google Drive Empresa\\Servidor\\Dvelopers\\Adora\\api fake\\adora-api-fake\\app\\Http"
     ]
   }
 }

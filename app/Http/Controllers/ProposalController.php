@@ -64,53 +64,70 @@ class ProposalController extends Controller
         $today = now()->format('Y-m-d');
         $maxDate = now()->addDays(30)->format('Y-m-d');
 
-        $debitId = rand(130000000, 140000000);
-        $contractId = rand(140000000, 150000000);
-        $debitValue = round(rand(1000000, 5000000) / 100, 2);
+        $firstNames = ['MARIA', 'JOAO', 'ANA', 'PEDRO', 'LUCAS', 'JULIANA', 'CARLOS', 'FERNANDA', 'RAFAEL', 'PATRICIA'];
+        $lastNames = ['SILVA', 'SANTOS', 'OLIVEIRA', 'SOUZA', 'PEREIRA', 'COSTA', 'FERREIRA', 'ALMEIDA', 'RODRIGUES', 'LIMA'];
+        $firstName = $firstNames[array_rand($firstNames)];
+        $lastName = $lastNames[array_rand($lastNames)];
+        $fullName = "$firstName $lastName";
 
-        $paymentOptions = $this->generatePaymentOptions($debitValue);
+        $numDebits = rand(1, 4);
+        $debits = [];
+
+        for ($i = 0; $i < $numDebits; $i++) {
+            $debitId = rand(130000000, 140000000);
+            $debitValue = round(rand(1000000, 5000000) / 100, 2);
+            $paymentOptions = $this->generatePaymentOptions($debitValue);
+
+            $numContracts = rand(1, 3);
+            $contracts = [];
+            for ($j = 0; $j < $numContracts; $j++) {
+                $contractValue = round($debitValue / $numContracts, 2);
+                $contracts[] = [
+                    'products' => [],
+                    'id' => rand(140000000, 150000000),
+                    'description' => $identifier,
+                    'value' => $contractValue,
+                    'percDiscount' => 0,
+                    'installments' => [],
+                    'invoices' => [],
+                    'externalId' => null,
+                ];
+            }
+
+            $statuses = ['OPEN', 'OPEN', 'OPEN', 'PENDING', 'EXPIRED'];
+            $status = $statuses[array_rand($statuses)];
+
+            $debits[] = [
+                'id' => $debitId,
+                'contracts' => $contracts,
+                'finalizedDate' => now()->toIso8601String(),
+                'identifier' => 'Negociacao',
+                'description' => null,
+                'paymentOptions' => $paymentOptions,
+                'selectedPaymentOption' => null,
+                'status' => $status,
+                'subStatus' => $status,
+                'totalValue' => $debitValue,
+                'totalValueExtenso' => NumberToWords::brl($debitValue),
+                'validDate' => $validDate,
+                'suggestedValidDate' => $validDate,
+                'maxValidDate' => $maxDate,
+                'minValidDate' => $today,
+                'boleto' => null,
+                'minValue' => $paymentOptions[0]['firstValue'],
+                'minValueExtenso' => NumberToWords::brl($paymentOptions[0]['firstValue']),
+                'externalId' => null,
+                'requestPromise' => (bool) rand(0, 1),
+                'canNegotiateAfterPromise' => (bool) rand(0, 1),
+            ];
+        }
 
         return response()->json([
             'id' => (int) $proposalId,
-            'name' => 'CLIENTE SIMULADO DA SILVA',
-            'firstName' => 'CLIENTE',
+            'name' => $fullName,
+            'firstName' => $firstName,
             'document' => $identifier,
-            'debits' => [
-                [
-                    'id' => $debitId,
-                    'contracts' => [
-                        [
-                            'products' => [],
-                            'id' => $contractId,
-                            'description' => $identifier,
-                            'value' => 0,
-                            'percDiscount' => 0,
-                            'installments' => [],
-                            'invoices' => [],
-                            'externalId' => null,
-                        ],
-                    ],
-                    'finalizedDate' => now()->toIso8601String(),
-                    'identifier' => 'Negociacao',
-                    'description' => null,
-                    'paymentOptions' => $paymentOptions,
-                    'selectedPaymentOption' => null,
-                    'status' => 'OPEN',
-                    'subStatus' => 'OPEN',
-                    'totalValue' => $debitValue,
-                    'totalValueExtenso' => NumberToWords::brl($debitValue),
-                    'validDate' => $validDate,
-                    'suggestedValidDate' => $validDate,
-                    'maxValidDate' => $maxDate,
-                    'minValidDate' => $today,
-                    'boleto' => null,
-                    'minValue' => $paymentOptions[0]['firstValue'],
-                    'minValueExtenso' => NumberToWords::brl($paymentOptions[0]['firstValue']),
-                    'externalId' => null,
-                    'requestPromise' => false,
-                    'canNegotiateAfterPromise' => false,
-                ],
-            ],
+            'debits' => $debits,
             'addresses' => null,
             'processing' => false,
             'message' => null,

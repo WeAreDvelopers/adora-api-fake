@@ -183,7 +183,7 @@ class ProposalController extends Controller
         $baseDiscount = 0.87;
         $avista = round($debitValue * (1 - $baseDiscount), 2);
 
-        $installmentConfigs = [
+        $allConfigs = [
             ['number' => 0, 'discount' => 0.8729, 'suggested' => true],
             ['number' => 2, 'discount' => 0.8330, 'suggested' => true],
             ['number' => 6, 'discount' => 0.8313, 'suggested' => false],
@@ -191,6 +191,9 @@ class ProposalController extends Controller
             ['number' => 18, 'discount' => 0.8264, 'suggested' => false],
             ['number' => 24, 'discount' => 0.8240, 'suggested' => false],
         ];
+
+        $count = rand(1, count($allConfigs));
+        $installmentConfigs = array_slice($allConfigs, 0, $count);
 
         $options = [];
         foreach ($installmentConfigs as $config) {
